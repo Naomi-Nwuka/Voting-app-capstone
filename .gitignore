@@ -4,3 +4,11 @@ bin/
 obj/
 .vs/
 node_modules/
+.env
+.env.*
+!.env.example
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!example.tfvars
