@@ -1,5 +1,5 @@
 # base defines a base stage that uses the official python runtime base image
-FROM python:3.11-slim AS base
+FROM python:3.11.13-slim AS base
 
 # Add curl for healthcheck
 RUN apt-get update && \
@@ -8,6 +8,9 @@ RUN apt-get update && \
 
 # Set the application directory
 WORKDIR /usr/local/app
+
+# Create a non-root user
+RUN useradd --create-home --shell /usr/sbin/nologin appuser
 
 # Install our requirements.txt
 COPY requirements.txt ./requirements.txt
@@ -23,10 +26,13 @@ CMD ["python", "app.py"]
 FROM base AS final
 
 # Copy our code from the current folder to the working directory inside the container
-COPY . .
+COPY --chown=appuser:appuser . .
 
 # Make port 80 available for links and/or publish
 EXPOSE 80
+
+# user
+USER appuser
 
 # Define our command to be run when launching the container
 CMD ["gunicorn", "app:app", "-b", "0.0.0.0:80", "--log-file", "-", "--access-logfile", "-", "--workers", "4", "--keep-alive", "0"]
