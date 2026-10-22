@@ -12,3 +12,9 @@ node_modules/
 *.tfstate.*
 *.tfvars
 !example.tfvars
+**/.terraform/*
+*.tfplan
+crash.log
+*.tfvars
+*.tfvars.json
+!**/.terraform.lock.hcl
