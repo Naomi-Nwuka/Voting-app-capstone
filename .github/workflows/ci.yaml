@@ -93,7 +93,7 @@ jobs:
         with:
           context: ./vote
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/voting-vote:${{ github.sha }}
+          tags: ghcr.io/naomi-nwuka/voting-vote:${{ github.sha }}
 
       - name: Push result image
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -101,7 +101,7 @@ jobs:
         with:
           context: ./result
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/voting-result:${{ github.sha }}
+          tags: ghcr.io/naomi-nwuka/voting-result:${{ github.sha }}
 
       - name: Push worker image
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -109,5 +109,5 @@ jobs:
         with:
           context: ./worker
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/voting-worker:${{ github.sha }}
+          tags: ghcr.io/naomi-nwuka/voting-worker:${{ github.sha }}
 
