@@ -1,37 +1,40 @@
-# base defines a base stage that uses the official python runtime base image
+# Base image
 FROM python:3.11-slim-bookworm AS base
 
+# Update operating system packages and install curl
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y --no-install-recommends curl && \
     rm -rf /var/lib/apt/lists/*
-# Set the application directory
+
+# Application directory
 WORKDIR /usr/local/app
 
 # Create a non-root user
 RUN useradd --create-home --shell /usr/sbin/nologin appuser
 
-# Install our requirements.txt
+# Update Python build tools and install application dependencies
+RUN python -m pip install --no-cache-dir --upgrade pip setuptools wheel
+
 COPY requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# dev defines a stage for development, where it'll watch for filesystem changes
+# Development stage
 FROM base AS dev
-RUN pip install watchdog
+
+RUN pip install --no-cache-dir watchdog
+
 ENV FLASK_ENV=development
+
 CMD ["python", "app.py"]
 
-# final defines the stage that will bundle the application for production
+# Production stage
 FROM base AS final
 
-# Copy our code from the current folder to the working directory inside the container
 COPY --chown=appuser:appuser . .
 
-# Make port 80 available for links and/or publish
 EXPOSE 80
 
-# user
 USER appuser
 
-# Define our command to be run when launching the container
 CMD ["gunicorn", "app:app", "-b", "0.0.0.0:80", "--log-file", "-", "--access-logfile", "-", "--workers", "4", "--keep-alive", "0"]
