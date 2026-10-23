@@ -15,7 +15,7 @@ spec:
         app: result
     spec:
       containers:
-      - image: dockersamples/examplevotingapp_result
+      - image: ghcr.io/naomi-nwuka/voting-result:592eaab4fe6a3f5feae486ec0f386ee16c67fe3c
         name: result
         ports:
         - containerPort: 80

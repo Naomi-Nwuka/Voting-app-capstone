@@ -2,6 +2,7 @@ var express = require('express'),
     async = require('async'),
     { Pool } = require('pg'),
     cookieParser = require('cookie-parser'),
+    path = require('path'),
     app = express(),
     server = require('http').Server(app),
     io = require('socket.io')(server);
