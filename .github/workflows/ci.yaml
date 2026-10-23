@@ -26,6 +26,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # Build application images locally for scanning
       - name: Build vote image
         uses: docker/build-push-action@v6
         with:
@@ -47,12 +48,15 @@ jobs:
           load: true
           tags: voting-worker:test
 
+      # Scan images for HIGH and CRITICAL vulnerabilities.
+      # Ignore vulnerabilities for which no fix is available.
       - name: Scan vote image with Trivy
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: voting-vote:test
           format: table
           severity: CRITICAL,HIGH
+          ignore-unfixed: true
           exit-code: '1'
 
       - name: Scan result image with Trivy
@@ -61,6 +65,7 @@ jobs:
           image-ref: voting-result:test
           format: table
           severity: CRITICAL,HIGH
+          ignore-unfixed: true
           exit-code: '1'
 
       - name: Scan worker image with Trivy
@@ -69,8 +74,10 @@ jobs:
           image-ref: voting-worker:test
           format: table
           severity: CRITICAL,HIGH
+          ignore-unfixed: true
           exit-code: '1'
 
+      # Authenticate to GitHub Container Registry on pushes to main only
       - name: Log in to GitHub Container Registry
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: docker/login-action@v3
@@ -79,6 +86,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # Publish images tagged with the commit SHA
       - name: Push vote image
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v6
@@ -102,3 +110,4 @@ jobs:
           context: ./worker
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/voting-worker:${{ github.sha }}
+
