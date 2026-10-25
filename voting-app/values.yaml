@@ -164,19 +164,19 @@ vote:
   replicas: 1
   image:
     repository: ghcr.io/naomi-nwuka/voting-vote
-    tag: "592eaab4fe6a3f5feae486ec0f386ee16c67fe3c"
+    tag: "ee2cf9ae4b670302f6adfe9c86bc985441b4f634"
 
 result:
   replicas: 1
   image:
     repository: ghcr.io/naomi-nwuka/voting-result
-    tag: "592eaab4fe6a3f5feae486ec0f386ee16c67fe3c"
+    tag: "ee2cf9ae4b670302f6adfe9c86bc985441b4f634"
 
 worker:
   replicas: 1
   image:
     repository: ghcr.io/naomi-nwuka/voting-worker
-    tag: "592eaab4fe6a3f5feae486ec0f386ee16c67fe3c"
+    tag: "ee2cf9ae4b670302f6adfe9c86bc985441b4f634"
 
 redis:
   replicas: 1
